@@ -1,1 +1,1 @@
-import panivida
+from panivida import panivida
