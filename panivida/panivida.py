@@ -27,8 +27,11 @@ def authentication(credentials, token, scopes):
           'https://www.googleapis.com/auth/gmail.compose'
           ]
     """
-    store = file.Storage(token)
-    creds = store.get()
+    try:
+        store = file.Storage(token)
+        creds = store.get()
+    except:
+        print("No token exsist locally. A new token will be created")
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets(credentials, scopes)
         creds = tools.run_flow(flow, store)
@@ -349,12 +352,3 @@ def get_mime_data(msg_id,data):
         return uni_msg_id
     except Exception as e:
         print("No Matching Email")
-
-
-
-
-
-
-
-
-

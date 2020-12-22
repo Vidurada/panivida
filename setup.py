@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'panivida',
   packages = ['panivida'],
-  version = '0.1',
+  version = '0.2',
   license='MIT',
   description = 'Simple wrapper class for Gmail API to send and receive email',
   author = 'Vidura Dantanarayana',
