@@ -15,6 +15,7 @@ setup(
           'apiclient',
           'oauth2client',
           'google-api-python-client',
+          'google_auth_oauthlib',
       ],
   classifiers=[
     'Development Status :: 3 - Alpha',

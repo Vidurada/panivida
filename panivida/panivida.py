@@ -11,6 +11,11 @@ from email.mime.multipart import MIMEMultipart
 import os.path
 import base64
 import email
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 
 
 def authentication(credentials, token, scopes):
@@ -27,15 +32,22 @@ def authentication(credentials, token, scopes):
           'https://www.googleapis.com/auth/gmail.compose'
           ]
     """
-    try:
-        store = file.Storage(token)
-        creds = store.get()
-    except:
-        print("No token exsist locally. A new token will be created")
-    if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets(credentials, scopes)
-        creds = tools.run_flow(flow, store)
-    service = build('gmail', 'v1', http=creds.authorize(Http()))
+    creds = None
+    if os.path.exists(token):
+        with open(token, 'rb') as token:
+            creds = pickle.load(token)
+
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                credentials, scopes)
+            creds = flow.run_local_server(port=0)
+        with open(token, 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('gmail', 'v1', credentials=creds)
     return service
 
 
